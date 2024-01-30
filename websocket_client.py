@@ -36,11 +36,13 @@ class WebSocketClient(QWidget):
         message = self.messageInput.text()
         if message:
             self.client.sendTextMessage(message)
-            self.saveMessage(message)
             self.messageInput.clear()
 
     def onMessageReceived(self, message):
-        self.messageDisplay.append(f"User: {message}")
+        if message:
+            print(message)
+            self.saveMessage(message)
+            self.messageDisplay.append(f"User: {message}")
 
     def onOpen(self):
         self.messageDisplay.append(f"Server: Connection Established")

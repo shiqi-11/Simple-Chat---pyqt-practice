@@ -1,12 +1,12 @@
-from upstash_ratelimit import Ratelimit, TokenBucket
-from upstash_redis import Redis
+import redis
+from redis_rate_limit import RateLimit, TooManyRequests
+
+redis_pool = redis.ConnectionPool(host='127.0.0.1', port=6379, db=0)
 
 
-def checkLimit():
-    ratelimit = Ratelimit(
-        redis=Redis.from_env(),
-        limiter=TokenBucket(max_tokens=3, refill_rate=3, interval=30),
-        # refill the bucket with 3 tokens every 30 seconds
-    )
-    response = ratelimit.block_until_ready("IP", timeout=30)
-    return response.allowed
+def checkLimit(user_ip):
+    try:
+        with RateLimit(resource='users_list', client=user_ip, max_requests=5, expire=20, redis_pool=redis_pool):
+            return True
+    except TooManyRequests:
+        return False

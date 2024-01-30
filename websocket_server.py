@@ -3,11 +3,17 @@ import websockets
 from ratel_imiter import checkLimit
 
 async def echo(websocket, path):
+    client_ip = websocket.remote_address[0]
+    print(client_ip)
+
     async for message in websocket:
-        if checkLimit():
+        isnotLimited = checkLimit(client_ip)
+        print(message, isnotLimited)
+        if isnotLimited:
             await websocket.send(message)
         else:
-            await  websocket.send("Too many requests, please try later!")
+            print(f"checkLimit is {checkLimit(client_ip)}, start send error")
+            await websocket.send("error")
 
 
 def start_server():
