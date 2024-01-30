@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def init_db():
     conn = sqlite3.connect('chathistory.db')
     cursor = conn.cursor()
@@ -10,5 +11,3 @@ def init_db():
                       timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)''')
     conn.commit()
     conn.close()
-
-

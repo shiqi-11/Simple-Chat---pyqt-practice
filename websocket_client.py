@@ -5,13 +5,14 @@ from PyQt6.QtCore import QUrl
 from PyQt6.QtWebSockets import QWebSocket
 from chat_database.chat_database import init_db
 
+
 class WebSocketClient(QWidget):
     def __init__(self, url):
         super().__init__()
 
         # Setup WebSocket
         self.client = QWebSocket()
-        self.client.error.connect(self.onError) # signal and slots
+        self.client.error.connect(self.onError)  # signal and slots
         self.client.textMessageReceived.connect(self.onMessageReceived)
         self.client.open(QUrl(url))
         self.client.connected.connect(self.loadHistory)
